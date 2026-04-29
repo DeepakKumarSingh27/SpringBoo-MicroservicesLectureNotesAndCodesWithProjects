@@ -1,0 +1,2 @@
+spring.application.name=48-SBMS-API-Gatway
+server.port=3333

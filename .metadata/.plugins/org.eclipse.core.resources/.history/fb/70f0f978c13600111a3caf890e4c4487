@@ -1,0 +1,11 @@
+package in.ashokit.controller;
+
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class GreetController {
+public String getGreetMsg() {
+	String msg = "Good Moring";
+	
+}
+}

@@ -1,0 +1,16 @@
+package in.ashokit;
+
+import org.springframework.cloud.client.loadbalancer.reactive.LoadBalancedExchangeFilterFunction;
+import org.springframework.stereotype.Component;org.springframework.cloud.gateway✅
+
+@Component
+public class MyPreFilter implements GlobalFilter {
+
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+		System.out.println("Pre Filter");
+		
+		
+		return chain.filter(exchange);
+	}
+}

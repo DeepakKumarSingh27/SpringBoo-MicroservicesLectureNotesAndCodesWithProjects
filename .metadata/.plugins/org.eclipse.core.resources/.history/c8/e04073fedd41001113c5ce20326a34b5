@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: 41-SB-REST-API
+
+server:
+  port: 9090
+messages:  
+  welcome: "Welcome to Ashok IT!!.."
+
+  
+  
+  

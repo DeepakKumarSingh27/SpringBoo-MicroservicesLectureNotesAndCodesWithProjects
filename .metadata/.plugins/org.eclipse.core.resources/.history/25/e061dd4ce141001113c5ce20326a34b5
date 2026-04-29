@@ -1,0 +1,8 @@
+package in.ashokit.props;
+
+import java.util.Map;
+
+public class AppProperties {
+
+	private Map<String, String> messages = new Map<String, String>();
+}

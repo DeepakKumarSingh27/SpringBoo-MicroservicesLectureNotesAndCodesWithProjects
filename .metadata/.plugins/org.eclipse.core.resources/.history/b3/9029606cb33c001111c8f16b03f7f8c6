@@ -1,0 +1,16 @@
+package in.ashokit.binding;
+
+@Schema(description = "Ticket Details")
+public class TicketInfo {
+
+	@Schema(description = "Ticket ID", example = "1234")
+	private Integer ticketId;
+
+	@Schema(description = "PNR Number", example = "JLJL6868")
+	private String pnr;
+
+	@Schema(description = "Ticket Status", example = "Confirmed")
+	private String ticketStatus;
+
+	// getters & setters
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;48-SBMS-API-Gatway&apos;" deleteContents="true" description="Delete resource &apos;48-SBMS-API-Gatway&apos;" element1="/48-SBMS-API-Gatway" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1777430804161"/>
+</session>

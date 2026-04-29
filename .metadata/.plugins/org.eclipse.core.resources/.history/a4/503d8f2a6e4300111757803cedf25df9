@@ -1,0 +1,21 @@
+package in.ashokit;
+
+import org.slf4j.LoggerFactory;
+import org.springframework.cloud.client.loadbalancer.reactive.LoadBalancedExchangeFilterFunction;
+import org.springframework.stereotype.Component;
+
+import ch.qos.logback.classic.Logger;org.springframework.cloud.gateway✅
+
+@Component
+public class MyPreFilter implements GlobalFilter {
+	
+	Logger lo
+
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+		System.out.println("Pre Filter");
+		
+		
+		return chain.filter(exchange);
+	}
+}

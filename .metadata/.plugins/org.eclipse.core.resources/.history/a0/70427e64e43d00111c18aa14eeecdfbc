@@ -1,0 +1,24 @@
+package in.ashokit.client;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import in.ashokit.binding.Book;
+
+@Service
+public class BookClient {
+
+	public void inVokeBookTicket() {
+		String apiURL = "/"; //client side pi
+		Book book = new Book();
+		book.setBookName("Java");
+		book.setBookPrice(345.00);
+
+		RestTemplate rt = new RestTemplate();
+		ResponseEntity<String> postForEntity = rt.postForEntity(apiURL, book, String.class);
+
+		System.out.println(postForEntity);
+
+	}
+}

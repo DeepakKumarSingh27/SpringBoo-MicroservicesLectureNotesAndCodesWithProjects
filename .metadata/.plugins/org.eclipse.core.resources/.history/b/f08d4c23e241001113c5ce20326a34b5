@@ -1,0 +1,11 @@
+package in.ashokit.rest;
+
+import org.springframework.web.bind.annotation.RestController;
+
+import in.ashokit.props.AppProperties;
+
+@RestController
+public class DemoRestController {
+
+	private AppProperties
+}

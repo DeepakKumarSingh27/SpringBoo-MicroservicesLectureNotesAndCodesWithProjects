@@ -1,0 +1,18 @@
+package in.ashokit.binding;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Passenger Information")
+public class PassangerInfo {
+
+	@Schema(description = "Passenger Name", example = "Deepak")
+	private String name;
+
+	@Schema(description = "Source Station", example = "Bangalore")
+	private String from;
+
+	@Schema(description = "Destination Station", example = "Delhi")
+	private String to;
+
+	// getters & setters
+}

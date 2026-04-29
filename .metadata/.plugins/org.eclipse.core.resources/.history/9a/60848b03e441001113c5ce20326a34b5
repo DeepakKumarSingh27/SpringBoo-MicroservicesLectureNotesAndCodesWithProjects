@@ -1,0 +1,11 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: 42-SB-YML-Reading-App
+    
+ashokit:
+ messages:
+  welcomeMsg : welcome to Ashokit
+  greetMsg: Good Morning
+  wishMsg: All the Best

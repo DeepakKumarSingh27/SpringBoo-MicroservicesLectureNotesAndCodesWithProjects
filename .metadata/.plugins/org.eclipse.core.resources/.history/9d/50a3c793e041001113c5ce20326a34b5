@@ -1,0 +1,4 @@
+spring:
+  application:
+    name: 42-SB-YML-Reading-App
+

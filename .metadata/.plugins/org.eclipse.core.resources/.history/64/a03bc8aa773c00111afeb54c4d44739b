@@ -1,0 +1,53 @@
+package in.ashokit.rest;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import in.ashokit.binding.PassangerInfo;
+import in.ashokit.binding.TicketInfo;
+
+@RestController
+public class TicketRestController {
+
+	public ResponseEntity<TicketInfo> getTicket(@PathVariable("ticketId") Integer ticketId) {
+		// logic to get ticket data
+		TicketInfo tinfo = new TicketInfo();
+		tinfo.setTicketId(ticketId);
+		tinfo.setPnr("JLJL6868");
+		tinfo.setTicketStatus("Confirmed");
+		return new ResponseEntity<TicketInfo>(tinfo, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/ticket", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<TicketInfo> bookTicket(@RequestBody PassangerInfo request) {
+
+		System.out.println(request);
+
+		// logic book ticket
+		TicketInfo tInfo = new TicketInfo();
+		tInfo.setTicketId(1234);
+		tInfo.setPnr("JLJL6868");
+		tInfo.setTicketStatus("Confirmed");
+		return new ResponseEntity<TicketInfo>(tInfo, HttpStatus.CREATED);
+
+	}
+
+	@PutMapping("/ticket")
+	public ResponseEntity<String> updateTicket(@RequestBody PassangerInfo request) {
+		// logic to update
+		return new ResponseEntity<String>("Ticket id Updated", HttpStatus.ACCEPTED);
+	}
+
+	@DeleteMapping("/ticket/{ticketId}")
+	public ResponseEntity<String> deleteTicket(@PathVariable("ticketId") Integer ticketId) {
+		// logic to delete ticket
+		return new ResponseEntity<String>("Ticket Deleted", HttpStatus.OK);
+	}
+
+}

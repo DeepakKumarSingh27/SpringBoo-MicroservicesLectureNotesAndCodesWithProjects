@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: 42-SB-YML-Reading-App
+server:
+  port: 9090

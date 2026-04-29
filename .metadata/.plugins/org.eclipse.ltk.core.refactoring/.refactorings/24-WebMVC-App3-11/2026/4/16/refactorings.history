@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;24-WebMVC-App3-11/src/main/webapp/apges&apos; to &apos;pages&apos;" description="Rename resource &apos;apges&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/webapp/apges" name="pages" stamp="1776036971738" updateReferences="true"/>
+</session>

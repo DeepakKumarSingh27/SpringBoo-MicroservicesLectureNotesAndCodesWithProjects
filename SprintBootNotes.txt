@@ -1,0 +1,2641 @@
+XML & JAX-B
+#############
+java -jar zipkin-server-3.4.1-exec.jar
+-> XML stands for Extensible Markup Language
+
+-> XML is free & open source
+
+-> XML is intereoperable (Language independent & Platform indenpendent)
+
+-> XML  we can use to transfer data from one application to another application
+
+-> XML introduced by w3c org
+
+-> The initial version of xml is 1.0 and the current version of xml is also 1.0
+
+-> XML will represent data in the form of elements
+
+-> An element is the combination of start tag and end tag
+
+	Ex:	<name> Ashok IT </name>
+
+-> We will have 2 types of elements in the XML
+
+1) Simple Element
+
+2) Compound Element
+
+
+-> The element which contains data directley is called as Simple Element
+
+		<name> Ashok IT </name>
+		
+		<type> Educational </type>
+
+
+-> The element which contains child element(s) is called as Compound Element
+
+		<person>
+			<id> 101 </id>
+			<name> raju </name>
+		</person>
+
+Note: here <person> is a compound element and <id> <name> are simple elements
+
+-> We can have attributes also for the element
+
+		<student  branch="CSE">
+			<id> 101 </id>
+			<name> Mahesh </name>
+		</student>
+
+
+Note: XML should have only one root element. Inside the root element we can have multiple child elements
+
+<persons>
+		<person>
+			<id> 101 </id>
+			<name> raju </name>
+		</person>
+
+		<person>
+			<id> 101 </id>
+			<name> raju </name>
+		</person>
+</persons>
+
+###########
+JAX-B
+############
+
+-> JAX-B stands for Java Architecture For XML Binding
+
+-> JAX-B is used to convert Java object to xml and xml to java object
+
+-> JAX-B is free and open source
+
+-> JAX-B given by sun microsystem
+
+-> JAX-B is part of JDK upto 1.8v
+
+-> If you are using JDK 1.8+ version of java then you need to add JAX-B dependency in pom.xml file
+
+-> The process of converting Java Object into xml is called as "Marshalling"
+
+-> The process of converting XML data to Java Object is called as "Un-Marshalling"
+
+-> To perform Marshalling and Un-Marshalling We need to design Binding Classes.
+
+-> The java class which represents the structure of XML is called as Binding class.
+
+-> JAX-B provided annotations to represent java class as Binding Class.
+
+Note: Binding Class creation is one time operation.
+
+Note: Earlier people used to create Binding Classes using XSD. XSD represents structure of xml.
+
+
+
+
+#####################
+Marshalling Example
+#####################
+
+
+@Data
+@XmlRootElement
+public class Person {
+
+	private Integer id;
+	private String name;
+	private Integer age;
+	private Long phno;
+	private Address adress;
+}
+----------------------------------
+@Data
+public class Address {
+	
+	private String city;
+	private String state;
+	private String country;
+}
+----------------------------------------
+public class ConverJavaToXml {
+
+	public static void main(String[] args) throws Exception {
+
+		Address addr = new Address();
+		addr.setCity("Hyd");
+		addr.setState("TG");
+		addr.setCountry("India");
+
+		Person person = new Person();
+		person.setId(101);
+		person.setName("John");
+		person.setAge(25);
+		person.setPhno(12575757l);
+		person.setAdress(addr);
+
+		JAXBContext instance = JAXBContext.newInstance(Person.class);
+
+		Marshaller marshaller = instance.createMarshaller();
+
+		marshaller.marshal(person, new File("Person.xml"));
+
+		System.out.println("Marshalling Completed....");
+	}
+}
+-----------------------------------------------------------------------------
+
+
+
+@XmlAccessorType(XmlAccessType.FIELD) : Controls marshalling and un-marshalling using fields of entity class
+
+@XmlAccessorOrder : Follow order of variables in the class to marshall and un-marshall
+
+@XmlElement(name = "PhoneNum") : It is used to change the name of element
+
+@XmlAttribute : It represents variable as attribute in xml
+
+@XmlTransient : To skip a variable in marshalling
+
+
+Note: By default every variable will be considered as Element and variable name will be considered as element name.
+
+
+@Data
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorOrder
+public class Person {
+
+	private Integer id;
+	private String name;
+
+	@XmlTransient
+	private Integer age;
+
+	@XmlElement(name = "PhoneNum")
+	private Long phno;
+
+	@XmlAttribute
+	private String type;
+
+	private Address adress;
+}
+-------------------------------------------------------------------------------------------------------
+
+public class ConvertXmlToJava {
+
+	public static void main(String[] args) throws Exception {
+
+		File xmlfile = new File("Person.xml");
+
+		JAXBContext context = JAXBContext.newInstance(Person.class);
+
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+
+		Object object = unmarshaller.unmarshal(xmlfile);
+
+		Person person = (Person) object;
+		
+		System.out.println(person);
+	}
+}
+
+-------------------------------------------------------------------------------------
+
+
+
+
+
+
+########
+JSON
+########
+
+-> JSON stands for Java Script object notation
+
+-> JSON will represent data in key-value format
+
+Ex :
+
+{
+     "id" : 101,
+     "name: "raju",
+     "age" : 20   
+}
+
+-> JSON is intereoperable (language in-dependent & platform independent)
+
+-> JSON is light weight
+
+-> JSON is both human readable and machine readable format
+
+-> In today's world people are using JSON format to exchange the data in B2B communications
+
+-> Now a days JSON is having more demand than XML because of its simplicity and light weight
+
+
+-> XML represents data in tags format (open tag & closed tag)
+-> Meta data will be more than actual data in XML
+-> XML occupies more memory to represent data
+
+-> JSON will take less memory
+-> JSON is light weight
+
+
+
+-> To work with JSON data in Java Applications we have below 3rd party APIs
+
+1) JACKSON API
+
+2) GSON API
+
+-> By using above apis we can convert JSON data to Java Object and vice versa
+
+
+-> The process of converting Java Object into JSON is called as Serialization
+
+-> The process of converting JSON data to Java Object is called as De-Serialization
+
+
+1) Create Maven project with below dependencies
+
+	<dependencies>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.13.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+2) Create Java classes to represent data (Use lombok)
+
+@Data
+public class Author {
+	
+	private String authorName;
+	private String authorEmail;
+	private Long authorPhno;
+
+}
+
+@Data
+public class Book {
+
+	private Integer id;
+	private String name;
+	private Double price;
+	private Author author;
+}
+
+3) Create Java class to convert Java Obj to JSON file
+
+public class JavaToJsonConverter {
+
+	public static void main(String[] args) throws Exception {
+
+		Author author = new Author();
+		author.setAuthorName("Rod Johnson");
+		author.setAuthorEmail("r.john@gmail.com");
+		author.setAuthorPhno(86868686l);
+
+		Book book = new Book();
+		book.setId(101);
+		book.setName("Spring");
+		book.setPrice(450.00);
+		book.setAuthor(author);
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		// converting java obj to json and store into a file
+		mapper.writeValue(new File("book.json"), book);
+
+		System.out.println("Conversion Completed....");
+	}
+}
+
+
+4) Create Java Class To Convert JSON to Java Object
+
+public class JsonToJavaConverter {
+
+	public static void main(String[] args) throws Exception {
+
+		File jsonFile = new File("book.json");
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		Book book = mapper.readValue(jsonFile, Book.class);
+
+		System.out.println(book);
+
+	}
+}
+
+
+++++++++++++++++++++++
+Working with GSON API
++++++++++++++++++++++++
+
+1) Create a maven project with below dependency
+
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.9.0</version>
+</dependency>
+
+-> GSON api provided by google
+
+-> In GSON api we have 'Gson' class to perform conversions
+
+
+		toJson ( ) -> to convert java object to JSON
+
+		fromJson ( ) -> to convert json data to java object
+
+
+
+RESTFul Services
++++++++++++++++
+
+-> REST stands for 'Representational State Transfer'
+
+-> RESTFul services are used to develop Distributed Applications with Intereoperability
+
+-> If one application is communicating with another application then those are called as 'Distributed Apps'
+
+-> Intereoperability means irrespective of the platform and language applications can communicate
+
+					java app <-----------> .Net app
+
+					.Net app <----------> Python app
+
+					Python app <---------> Java App
+
+-> Distributed applications are used for B 2 B communications
+
+-> B2B means Business to Business Communication
+
+-> Distributed Application will re-use services of one application in another application
+
+-> RESTful Services are providing 'Intereoperability'
+
+-> Two Actors will be involved in Distributed Applications development
+
+			1) Provider 
+			2) Consumer
+
+-> The application which is providing business services is called as Provider Application
+
+-> The application which is accessing business services is called as Consumer Application
+
+Note: One provider application can have multiple consumer applications
+
+-> Provider and Consumer will communicate using HTTP as a mediator
+
+-> Provider and Consumer will exchange the data in Text / XML / JSON format
+
+Note: In Industry we will use JSON format to exchange data from one application to another application
+
+-> To start our journey with RESTFul services development we should be good in below areas
+
+1) HTTP Protocol (Methods, Status Codes, Req structure & Res Structure)
+
+2) XML and JAX-B Api
+
+3) JSON and Jackson Api
+
+################
+What is HTTP ?
+################
+
+-> HTTP stands for Hyper Text Transfer Protocol
+
+-> It acts as a mediator between client & server  ( Consumer & Provider )
+
+-> Consumer application will send HTTP Req to Provider application
+
+-> Provider application will process the request and it will send HTTP response to Consumer
+
+
+###############
+HTTP Methods
+###############
+
+-> HTTP methods are used to send request from Consumer application to Provider application
+
+-> HTTP method will represent what type of operation  client / consumer wants to perform with Provider
+
+a) GET
+b) POST
+c) PUT
+d) DELETE
+
+
+-> GET request is used to retrieve data from Server / Provider application.
+-> GET request will not have body to send data in the request
+-> To send any data using GET request then we will use Path Params & Query Params
+
+			Ex: https://www.youtube.com/watch?v=VO818de8sdk
+
+Note: Path Params & Query Params data will be displayed in the URL
+
+Note: It is not recommended to send sensitive / secret data using Path Params & Query Params
+
+-> GET request is Idempotent (means if you send same GET request for multiple times also nothing will change at server)
+
+
+
+-> POST request is used to create a new record at server 
+-> When consumer wants to send huge data/ sensitive data then Consumer will use POST request
+-> POST request contains request body
+-> POST request is Non-Idempotent
+
+Note: In POST request we can send data in URL and in Request Body.
+
+Note: Request Body is the recommended approach to send sensitive data to server
+
+
+-> PUT request is used to update a record at server
+-> When consumer wants to update a record at then consumer will send PUT request to Provider
+-> PUT request contains request body
+-> PUT request is Idempotent
+
+Note: In PUT request we can send data in URL and in Request Body.
+
+Note: Request Body is the recommended approach to send sensitive data to server
+
+
+
+-> DELETE request is used to delete a record at server
+-> DELETE request contains request body
+-> DELETE request is Idempotent
+
+Note: In DELETE request we can send data in URL and in Request Body.
+
+
+######################
+HTTP Request Structure
+#######################
+
+1) Intial Request Line  ( HTTP method + URL )
+2) Request Headers ( key-value )
+3) Blank Line to seperate Header & Body
+4) Request Body (Request Payload)
+
+
+######################
+HTTP Response Structure
+#######################
+
+1) Initial Response line (Protocl Version + Status Code + Status msg)
+2) Response Headers (Key-value)
+3) Blank Line to seperate Header & Body
+4) Response Body (Response Payload)
+
+
+
+##################
+HTTP Status Codes
+##################
+
+-> HTTP Status codes will represent how the request process by server / provider
+
+1xx (100 - 199)  ---> INFO
+
+2xx  (200 - 299)  ---> OK (success)
+
+3xx  (300 - 399)  ---> Redirect
+
+4xx (400 - 499) ---> Client Error
+
+5xx (500 - 599) ---> Server Error
+
+What is Disributed Application
+What is Intereoperability
+What is HTTP Protocol
+HTTP Methods
+HTTP Status Codes
+HTTP Request Structure
+HTTP Response Structure
+Working with XML and JAX-B
+Working with JSON and Jackson
+
+
++++++++++++++++++++++++++++++++
+How to develop REST API using Java
++++++++++++++++++++++++++++++++++
+
+-> To develop RESFul Services/ REST APIs using java SUN Microsystem released 'JAX-RS' API
+
+-> JAX-RS api having 2 implementations
+
+			1) Jersey (Sun Microsystems)
+			2) REST Easy (JBOSS)
+
+Note: We can develop RESTFul Services using any one of the above implementation
+
+-> Spring framework also provided support to develop RESTFul Services using 'Spring Web MVC' module.
+
+
++++++++++++++++++++++++++
+RESTFul Services Architecture
++++++++++++++++++++++++++
+
+-> We will have 2 actors in RESTful services
+
+		1) Provider / Resource
+
+		2) Consumer / Client
+
+
+-> The application which is providing services to other applications is called as Provider or Resource application
+
+-> The application which is accessing services from other applications is called as Consumer or Client application
+
+-> Client application and Resource application will exchange data in intereoperable format (like XML & JSON)
+
+								
+								  request
+					client app <------------------------> resource app
+							         response
+
+
+Note: RESTful Services are used to develop B2B communications (No presentation logic, No view Resolver)
+
++++++++++++++++++++++++++++++++++++
+Develop First REST API Using Spring Boot
++++++++++++++++++++++++++++++++++++
+
+1) Create Spring starter application with below dependencies
+
+		a) web-starter
+		b) devtools
+
+2) Create RestController with Required methods
+
+Note: To represent java class as Rest Controller we will use @RestController annotation
+
+			@RestController  =  @Controller + @ResponseBody
+
+Note: Every RestController method should be binded to HTTP Protocol method
+
+	Ex: @GetMapping, @PostMapping, @PutMapping & @DeleteMapping
+
+3) Run the application and test it.
+
+Note: To test REST APIs we will use POSTMAN tool (It is free)
+
+Note: Download postman tool to test our REST API functionality
+
+
++++++++++++++++++++++++++++++++++++
+@RestController
+public class WelcomeRestController {
+
+	@GetMapping("/welcome")
+	public ResponseEntity<String> getWelcomeMsg() {
+		String respPayload = "Welcome to Ashok IT";
+		return new ResponseEntity<>(respPayload, HttpStatus.OK);
+	}
+
+	@GetMapping("/greet")
+	public String getGreetMsg() {
+		String respPayload = "Good Morning..!!";
+		return respPayload;
+	}
+}
++++++++++++++++++++++++++++++++++++
+
+Note: GET Request will not contain Request Body to send data
+
+
+-> We can use Query Params and Path Params to send data in GET Request
+
+-> Query Params & Path Params will represent data in URL directlry
+
+++++++++++++++
+Query Params
+++++++++++++++
+
+-> Query Params are used to send data to server in URL directly
+
+-> Query Params will represent data in key-value format
+
+-> Query Params will start with '?'
+
+-> Query Parameters will be seperated by '&'
+
+-> Query Parameters should present only at the end of the URL
+
+		Ex: www.ashokit.in/courses?name=SBMS&trainer=Ashok
+
+-> To read Query Parameters from the URL we will use @RequestParam annotation
+
+
+
+	@GetMapping("/welcome")
+	public ResponseEntity<String> getWelcomeMsg(@RequestParam("name") String name) {
+		String respPayload = name + ", Welcome to Ashok IT";
+		return new ResponseEntity<>(respPayload, HttpStatus.OK);
+	}
+
+	URL : http://localhost:8080/welcome?name=Raju
+
+
+
++++++++++++++++++++++++++++++++++
+Working with 2 Query Params in URL
++++++++++++++++++++++++++++++++++++
+@RestController
+public class CourseRestController {
+
+	@GetMapping("/course")
+	public ResponseEntity<String> getCourseFee(@RequestParam("cname") String cname,
+			@RequestParam("tname") String tname) {
+
+		String respBody = cname + " By " + tname + " Fee is 7000 INR";
+
+		return new ResponseEntity<>(respBody, HttpStatus.OK);
+
+	}
+}
+
+URL : http://localhost:8080/course?cname=JRTP&tname=Ashok
+
+
+++++++++++++++++++++++++++++
+Path Parameter or URI variables
++++++++++++++++++++++++++++++
+
+-> Path Parameters are also used to send data to server in URL
+
+-> Path Params will represent data directley in URL (no keys)
+
+-> Path Params can present anywhere in the URL
+
+-> Path Params will be seperated by / (slash)
+
+-> Path Params should be represented in Method URL pattern (Template Pattern)
+
+		
+		Ex:  www.ashokit.in/courses/{cname}/trainer/{tname}
+
+-> To read Path Parameters we will use @PathVariable annotation
+
+
+
+@RestController
+public class BookRestController {
+
+	@GetMapping("/book/{name}")
+	public ResponseEntity<String> getBookPrice(@PathVariable("name") String name) {
+
+		String respBody = name + " Price is 400 $";
+
+		return new ResponseEntity<>(respBody, HttpStatus.OK);
+	}
+
+	@GetMapping("/book/name/{bname}/author/{aname}")
+	public ResponseEntity<String> getBook(@PathVariable("bname") String bname,
+			@PathVariable("aname") String aname) {
+
+		String respBody = bname + " By " + aname + " is out of stock";
+
+		return new ResponseEntity<>(respBody, HttpStatus.OK);
+	}
+}
+
+URL-1 : http://localhost:8080/book/spring
+
+URL-2 : http://localhost:8080/book/name/spring/author/rodjohnson
+
+
++++++++++++++++++++++++++++++++++++++++
+Q) When to use Path Params & Query Params ?
+++++++++++++++++++++++++++++++++++++++++
+
+-> To retrieve more than one record/resource we will use Query Params (filtering)
+
+-> To retreive specific/unique record we will use Path Params (single)
+
+
+
+################
+What is Produces
+#################
+
+-> "produces" is a media type
+-> It represents the response formats supported by REST Controller Method
+-> One method can support multiple response formats (xml and json)
+
+		produces = { "application/xml", "application/json" }
+
+-> Client should send a request with "Accept" http header
+-> Accept header represents in which format client expecting response from the REST api
+-> Based on Accept header value 'Message Converter' will convert the response into client expected format
+
+
+@Data
+@XmlRootElement
+@NoArgsConstructor
+@AllArgsConstructor
+public class Product {
+
+	private Integer pid;
+	private String pname;
+	private Double price;
+
+}
+
+@RestController
+public class ProductRestController {
+
+	@GetMapping(
+			value = "/product", 
+			produces = { "application/xml", "application/json" }
+	)
+	public ResponseEntity<Product> getProduct() {
+
+		Product p1 = new Product(101, "Monitor", 8000.00);
+
+		return new ResponseEntity<>(p1, HttpStatus.OK);
+	}
+
+	@GetMapping("/products")
+	public ResponseEntity<List<Product>> getProducts(){
+		
+		Product p1 = new Product(101, "Monitor", 8000.00);
+		Product p2 = new Product(102, "RAM", 6000.00);
+		Product p3 = new Product(103, "CPU", 15000.00);
+		
+		List<Product> products = Arrays.asList(p1,p2,p3);
+		
+		return new ResponseEntity<>(products, HttpStatus.OK);
+	}
+}
+
+##############################
+Working with HTTP POST Request
+#############################
+
+-> HTTP POST request is used to create new resource/record at server
+
+-> POST request contains request body
+
+-> Client can send data to server in Request Body
+
+-> To bind Rest Controller method to POST request we willl use @PostMapping
+
+-> To read data from Requet body we will use @RequestBody annotation
+
+-> "consumes" represents in which formats method can take input
+
+-> "Content-Type" header represents in which format client sending data in request body.
+
+
+
+
+@Data
+@XmlRootElement
+public class Book {
+
+	private Integer id;
+	private String name;
+	private Double price;
+
+}
+---------------------------
+@RestController
+public class BookRestController {
+
+	@PostMapping(
+			value = "/book", 
+			consumes = { "application/json", "application/xml" }
+	)	
+	public ResponseEntity<String> addBook(@RequestBody Book book) {
+		System.out.println(book);
+
+		// logic to store in DB
+
+		String msg = "Book Added Succesfully";
+
+		return new ResponseEntity<String>(msg, HttpStatus.CREATED);
+	}
+}
+
+----------------
+{
+	"id" : 101,
+	"name" : "Java",
+	"price" : 450.00
+}
+
+------------------------
+
+
+-> produces vs consumes
+
+-> Content-Type  vs Accept
+
+
+-> produces attribute represents in which formats Method can provide response data to clients
+
+-> consumes attribute represents in which formats Method can take request data from clients
+
+-> Accept header represents in which format client expecting response from REST API
+
+-> Content-Type header represents in which format client is sending request data to REST API
+
+
+Note: We can use both Consumes & Produces in single REST API method.
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+Requirement : Develop IRCTC REST API to book a train ticket
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+-> To develop any REST API first we have to understand the requirement
+
+-> Identify input / request data
+
+-> Identify output / response data
+
+-> Create request & response binding classes
+
+-> Create REST Controller with required methods.
+
+-> Test REST API methods behaviour using Postman
+
+
+
+
+@Data
+public class PassengerInfo {
+	
+	private String name;
+	private Long phno;
+	private String jdate;
+	private String from;
+	private String to;
+	private Integer trainNum;
+
+}
+
+@Data
+public class TicketInfo {
+
+	private Integer ticketId;
+	private String pnr;
+	private String ticketStatus;
+
+}
+
+@RestController
+public class TicketRestController {
+
+	@PostMapping(
+			value = "/ticket", 
+			produces = {"application/json"}, 
+			consumes = {"application/json"}
+	)
+	public ResponseEntity<TicketInfo> bookTicket(@RequestBody PassengerInfo request){
+		System.out.println(request);
+
+		//logic to book ticket
+		TicketInfo tinfo = new TicketInfo();
+		tinfo.setTicketId(1234);
+		tinfo.setPnr("JLJL6868");
+		tinfo.setTicketStatus("CONFIRMED");
+
+		return new ResponseEntity<>(tinfo, HttpStatus.CREATED);
+	}
+}
+
+-------------------------------
+{
+	"name"   : "Ashok",
+	"phno"	 : 12345678,
+	"jdate"  : "05-08-2022",
+	"from"   : "hyd",
+	"to"     : "pune",
+	"trainNum" : 8574
+}
+
+{
+    "ticketId": 1234,
+    "pnr": "JLJL6868",
+    "ticketStatus": "CONFIRMED"
+}
+
+
+#################
+HTTP PUT Request
+#################
+
+-> PUT request is used to update an existing record / resource at server
+
+-> PUT Request can take data in URL and in Request Body
+
+-> To bind our method to PUT request we will use @PutMapping
+
+	@PutMapping("/ticket")
+	public ResponseEntity<String> updateTicket(@RequestBody PassengerInfo request){
+		System.out.println(request);
+		//logic to update ticket
+		return new ResponseEntity<>("Ticket Updated", HttpStatus.OK);
+	}
+
+####################
+HTTP DELETE Request
+####################
+
+-> DELETE request is used to delete an existing record / resource at server
+
+-> DELETE Request can take data in URL and in Request Body
+
+-> To bind our method to DELETE request we will use @DeleteMapping
+
+
+	@DeleteMapping("/ticket/{ticketId}")
+	public ResponseEntity<String> deleteTicket(@PathVariable("ticketId") Integer ticketId){
+		//logic to delete the ticket
+		return new ResponseEntity<>("Ticket Deleted", HttpStatus.OK);
+	}
+
+
+------------------------------------------
+What is RestController ?
+REST Controller Methods
+@GetMapping
+@PostMapping
+@PutMapping
+@DeleteMapping
+
+Query Params
+Path Params
+Request Body
+Response Body
+
+@RequestParam
+@PathVariable
+@RequestBody
+
+produces
+consumes
+Accept
+Content-Type
+
+Message Converters
+
+ResponseEntity
+
+
+Q) Can we write the logic to update a record in POST request method ?
+
+Ans) Yes, we can do it but not recommended. We need to follow HTTP Protocol standards while developing REST API.
+
+
++++++++++
+Swagger 
++++++++
+
+-> Swagger is used to generate documentation for REST APIs
+
+-> Swagger UI is used to test REST API with user interface
+
+Assignment : https://youtu.be/ARlz2-Twm-g  (watch Swagger video & practise it)
+
+
+-> As of now we developed several REST API's
+
+-> We have tested our REST APIs functionality using POSTMAN
+
+-> We have added Swagger  to generate documentation for REST API
+
+-> We have used Swagger UI also to test REST API with User Interface
+
+-> All our REST APIs executed in localhost (only we can access within our machine)
+
+-> Our REST API running in the server, that server is running in local machine thats why we can access only in our local machine (It is not available for public access)
+
+-> To provide public access for our REST API we need to deploy that into cloud platform
+
+-> Cloud means getting resources over the web, based on our demand
+
+-> We have several cloud platforms in the market
+
+1) AWS
+
+2) Azure
+
+3) GCP
+
+4) VM Ware
+
+5) Heroku etc....
+
+
+
+-> Heroku Cloud Providing 'Platform As a Service' to run our applications (PaaS)
+-> Heroku Cloud Platform provided by Salesforce cloud
+
+-> We can deploy 5 applications in Heroku for free of cost
+
+
+########################################
+App Deployment using HEROKU CLI
+#######################################
+
+1) Create Account in Heroku Cloud Platform (Free of cost)
+
+	URL : https://dashboard.heroku.com/
+
+2) Login into heroku, Create App in heroku cloud (5 apps we can create for free)
+
+3) Click on App name and go to 'Deploy' section
+
+Note: We can deploy our code into heroku app using CLI and by using Git Hub Repo
+
+4) Download Heroku CLI Software 
+
+	URL : https://devcenter.heroku.com/articles/heroku-cli
+
+5) Login into Heroku CLI ( Open command prompt and execute below command)
+
+	$ heroku login
+
+Note: It will open browser to login (Login into that)
+
+6) From cmd navigate to project folder
+
+	$ cd <project-location>
+
+7) Execute below commands to deploy our code into heroku cloud (heroku will provide these commands)
+
+$ git init
+
+$ heroku git:remote -a <heroku-app-name>
+
+$ git add .
+
+$ git commit -am "make it better"
+
+$ git push heroku master
+
+Note: With these commands, our code deployment got completed.
+
+8) Once deployment is success, we can access our application from browser (click on Open App button)
+
+
+#########################################
+How to deploy Spring Boot App in AWS Cloud
+#########################################
+
+1) Create free tier account in AWS
+
+2) Launch EC2 Linux Virtual Machine in AWS Cloud
+
+3) Connect to EC2 Linux VM using MobaXterm / PuTTY
+
+4) Upload our Spring Boot Jar file into EC2 VM
+
+5) Install Java software in EC2 VM
+
+6) Run the Java application in EC2 VM
+
+7) Access the application in browser
+
+
+###################################
+Videos to understand AWS deployment
+###################################
+
+==>  Launch EC2 VM in AWS : https://youtu.be/uI2iDk8iTps
+
+==> Deploy Spring Boot App in AWS Cloud : https://youtu.be/cRQPgbwOWq0
+
+
+What is Disributed Application
+What is Intereoperability
+What is HTTP Protocol
+HTTP Methods
+HTTP Status Codes
+HTTP Request Structure
+HTTP Response Structure
+Working with XML and JAX-B
+Working with JSON and Jackson
+
+
++++++++++++++++++++++++++++++++
+How to develop REST API using Java
++++++++++++++++++++++++++++++++++
+
+-> To develop RESFul Services/ REST APIs using java SUN Microsystem released 'JAX-RS' API
+
+-> JAX-RS api having 2 implementations
+
+			1) Jersey (Sun Microsystems)
+			2) REST Easy (JBOSS)
+
+Note: We can develop RESTFul Services using any one of the above implementation
+
+-> Spring framework also provided support to develop RESTFul Services using 'Spring Web MVC' module.
+
+
++++++++++++++++++++++++++
+RESTFul Services Architecture
++++++++++++++++++++++++++
+
+-> We will have 2 actors in RESTful services
+
+		1) Provider / Resource
+
+		2) Consumer / Client
+
+
+-> The application which is providing services to other applications is called as Provider or Resource application
+
+-> The application which is accessing services from other applications is called as Consumer or Client application
+
+-> Client application and Resource application will exchange data in intereoperable format (like XML & JSON)
+
+								
+								  request
+					client app <------------------------> resource app
+							         response
+
+
+Note: RESTful Services are used to develop B2B communications (No presentation logic, No view Resolver)
+
++++++++++++++++++++++++++++++++++++
+Develop First REST API Using Spring Boot
++++++++++++++++++++++++++++++++++++
+
+1) Create Spring starter application with below dependencies
+
+		a) web-starter
+		b) devtools
+
+2) Create RestController with Required methods
+
+Note: To represent java class as Rest Controller we will use @RestController annotation
+
+			@RestController  =  @Controller + @ResponseBody
+
+Note: Every RestController method should be binded to HTTP Protocol method
+
+	Ex: @GetMapping, @PostMapping, @PutMapping & @DeleteMapping
+
+3) Run the application and test it.
+
+Note: To test REST APIs we will use POSTMAN tool (It is free)
+
+Note: Download postman tool to test our REST API functionality
+
+
++++++++++++++++++++++++++++++++++++
+@RestController
+public class WelcomeRestController {
+
+	@GetMapping("/welcome")
+	public ResponseEntity<String> getWelcomeMsg() {
+		String respPayload = "Welcome to Ashok IT";
+		return new ResponseEntity<>(respPayload, HttpStatus.OK);
+	}
+
+	@GetMapping("/greet")
+	public String getGreetMsg() {
+		String respPayload = "Good Morning..!!";
+		return respPayload;
+	}
+}
++++++++++++++++++++++++++++++++++++
+
+Note: GET Request will not contain Request Body to send data
+
+
+-> We can use Query Params and Path Params to send data in GET Request
+
+-> Query Params & Path Params will represent data in URL directlry
+
+++++++++++++++
+Query Params
+++++++++++++++
+
+-> Query Params are used to send data to server in URL directly
+
+-> Query Params will represent data in key-value format
+
+-> Query Params will start with '?'
+
+-> Query Parameters will be seperated by '&'
+
+-> Query Parameters should present only at the end of the URL
+
+		Ex: www.ashokit.in/courses?name=SBMS&trainer=Ashok
+
+-> To read Query Parameters from the URL we will use @RequestParam annotation
+
+
+
+	@GetMapping("/welcome")
+	public ResponseEntity<String> getWelcomeMsg(@RequestParam("name") String name) {
+		String respPayload = name + ", Welcome to Ashok IT";
+		return new ResponseEntity<>(respPayload, HttpStatus.OK);
+	}
+
+	URL : http://localhost:8080/welcome?name=Raju
+
+
+
++++++++++++++++++++++++++++++++++
+Working with 2 Query Params in URL
++++++++++++++++++++++++++++++++++++
+@RestController
+public class CourseRestController {
+
+	@GetMapping("/course")
+	public ResponseEntity<String> getCourseFee(@RequestParam("cname") String cname,
+			@RequestParam("tname") String tname) {
+
+		String respBody = cname + " By " + tname + " Fee is 7000 INR";
+
+		return new ResponseEntity<>(respBody, HttpStatus.OK);
+
+	}
+}
+
+URL : http://localhost:8080/course?cname=JRTP&tname=Ashok
+
+
+++++++++++++++++++++++++++++
+Path Parameter or URI variables
++++++++++++++++++++++++++++++
+
+-> Path Parameters are also used to send data to server in URL
+
+-> Path Params will represent data directley in URL (no keys)
+
+-> Path Params can present anywhere in the URL
+
+-> Path Params will be seperated by / (slash)
+
+-> Path Params should be represented in Method URL pattern (Template Pattern)
+
+		
+		Ex:  www.ashokit.in/courses/{cname}/trainer/{tname}
+
+-> To read Path Parameters we will use @PathVariable annotation
+
+
+
+@RestController
+public class BookRestController {
+
+	@GetMapping("/book/{name}")
+	public ResponseEntity<String> getBookPrice(@PathVariable("name") String name) {
+
+		String respBody = name + " Price is 400 $";
+
+		return new ResponseEntity<>(respBody, HttpStatus.OK);
+	}
+
+	@GetMapping("/book/name/{bname}/author/{aname}")
+	public ResponseEntity<String> getBook(@PathVariable("bname") String bname,
+			@PathVariable("aname") String aname) {
+
+		String respBody = bname + " By " + aname + " is out of stock";
+
+		return new ResponseEntity<>(respBody, HttpStatus.OK);
+	}
+}
+
+URL-1 : http://localhost:8080/book/spring
+
+URL-2 : http://localhost:8080/book/name/spring/author/rodjohnson
+
+
++++++++++++++++++++++++++++++++++++++++
+Q) When to use Path Params & Query Params ?
+++++++++++++++++++++++++++++++++++++++++
+
+-> To retrieve more than one record/resource we will use Query Params (filtering)
+
+-> To retreive specific/unique record we will use Path Params (single)
+
+
+
+################
+What is Produces
+#################
+
+-> "produces" is a media type
+-> It represents the response formats supported by REST Controller Method
+-> One method can support multiple response formats (xml and json)
+
+		produces = { "application/xml", "application/json" }
+
+-> Client should send a request with "Accept" http header
+-> Accept header represents in which format client expecting response from the REST api
+-> Based on Accept header value 'Message Converter' will convert the response into client expected format
+
+
+@Data
+@XmlRootElement
+@NoArgsConstructor
+@AllArgsConstructor
+public class Product {
+
+	private Integer pid;
+	private String pname;
+	private Double price;
+
+}
+
+@RestController
+public class ProductRestController {
+
+	@GetMapping(
+			value = "/product", 
+			produces = { "application/xml", "application/json" }
+	)
+	public ResponseEntity<Product> getProduct() {
+
+		Product p1 = new Product(101, "Monitor", 8000.00);
+
+		return new ResponseEntity<>(p1, HttpStatus.OK);
+	}
+
+	@GetMapping("/products")
+	public ResponseEntity<List<Product>> getProducts(){
+		
+		Product p1 = new Product(101, "Monitor", 8000.00);
+		Product p2 = new Product(102, "RAM", 6000.00);
+		Product p3 = new Product(103, "CPU", 15000.00);
+		
+		List<Product> products = Arrays.asList(p1,p2,p3);
+		
+		return new ResponseEntity<>(products, HttpStatus.OK);
+	}
+}
+
+##############################
+Working with HTTP POST Request
+#############################
+
+-> HTTP POST request is used to create new resource/record at server
+
+-> POST request contains request body
+
+-> Client can send data to server in Request Body
+
+-> To bind Rest Controller method to POST request we willl use @PostMapping
+
+-> To read data from Requet body we will use @RequestBody annotation
+
+-> "consumes" represents in which formats method can take input
+
+-> "Content-Type" header represents in which format client sending data in request body.
+
+
+
+
+@Data
+@XmlRootElement
+public class Book {
+
+	private Integer id;
+	private String name;
+	private Double price;
+
+}
+---------------------------
+@RestController
+public class BookRestController {
+
+	@PostMapping(
+			value = "/book", 
+			consumes = { "application/json", "application/xml" }
+	)	
+	public ResponseEntity<String> addBook(@RequestBody Book book) {
+		System.out.println(book);
+
+		// logic to store in DB
+
+		String msg = "Book Added Succesfully";
+
+		return new ResponseEntity<String>(msg, HttpStatus.CREATED);
+	}
+}
+
+----------------
+{
+	"id" : 101,
+	"name" : "Java",
+	"price" : 450.00
+}
+
+------------------------
+
+
+-> produces vs consumes
+
+-> Content-Type  vs Accept
+
+
+-> produces attribute represents in which formats Method can provide response data to clients
+
+-> consumes attribute represents in which formats Method can take request data from clients
+
+-> Accept header represents in which format client expecting response from REST API
+
+-> Content-Type header represents in which format client is sending request data to REST API
+
+
+Note: We can use both Consumes & Produces in single REST API method.
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+Requirement : Develop IRCTC REST API to book a train ticket
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+-> To develop any REST API first we have to understand the requirement
+
+-> Identify input / request data
+
+-> Identify output / response data
+
+-> Create request & response binding classes
+
+-> Create REST Controller with required methods.
+
+-> Test REST API methods behaviour using Postman
+
+
+
+
+@Data
+public class PassengerInfo {
+	
+	private String name;
+	private Long phno;
+	private String jdate;
+	private String from;
+	private String to;
+	private Integer trainNum;
+
+}
+
+@Data
+public class TicketInfo {
+
+	private Integer ticketId;
+	private String pnr;
+	private String ticketStatus;
+
+}
+
+@RestController
+public class TicketRestController {
+
+	@PostMapping(
+			value = "/ticket", 
+			produces = {"application/json"}, 
+			consumes = {"application/json"}
+	)
+	public ResponseEntity<TicketInfo> bookTicket(@RequestBody PassengerInfo request){
+		System.out.println(request);
+
+		//logic to book ticket
+		TicketInfo tinfo = new TicketInfo();
+		tinfo.setTicketId(1234);
+		tinfo.setPnr("JLJL6868");
+		tinfo.setTicketStatus("CONFIRMED");
+
+		return new ResponseEntity<>(tinfo, HttpStatus.CREATED);
+	}
+}
+
+-------------------------------
+{
+	"name"   : "Ashok",
+	"phno"	 : 12345678,
+	"jdate"  : "05-08-2022",
+	"from"   : "hyd",
+	"to"     : "pune",
+	"trainNum" : 8574
+}
+
+{
+    "ticketId": 1234,
+    "pnr": "JLJL6868",
+    "ticketStatus": "CONFIRMED"
+}
+
+
+#################
+HTTP PUT Request
+#################
+
+-> PUT request is used to update an existing record / resource at server
+
+-> PUT Request can take data in URL and in Request Body
+
+-> To bind our method to PUT request we will use @PutMapping
+
+	@PutMapping("/ticket")
+	public ResponseEntity<String> updateTicket(@RequestBody PassengerInfo request){
+		System.out.println(request);
+		//logic to update ticket
+		return new ResponseEntity<>("Ticket Updated", HttpStatus.OK);
+	}
+
+####################
+HTTP DELETE Request
+####################
+
+-> DELETE request is used to delete an existing record / resource at server
+
+-> DELETE Request can take data in URL and in Request Body
+
+-> To bind our method to DELETE request we will use @DeleteMapping
+
+
+	@DeleteMapping("/ticket/{ticketId}")
+	public ResponseEntity<String> deleteTicket(@PathVariable("ticketId") Integer ticketId){
+		//logic to delete the ticket
+		return new ResponseEntity<>("Ticket Deleted", HttpStatus.OK);
+	}
+
+
+------------------------------------------
+What is RestController ?
+REST Controller Methods
+@GetMapping
+@PostMapping
+@PutMapping
+@DeleteMapping
+
+Query Params
+Path Params
+Request Body
+Response Body
+
+@RequestParam
+@PathVariable
+@RequestBody
+
+produces
+consumes
+Accept
+Content-Type
+
+Message Converters
+
+ResponseEntity
+
+
+Q) Can we write the logic to update a record in POST request method ?
+
+Ans) Yes, we can do it but not recommended. We need to follow HTTP Protocol standards while developing REST API.
+
+
++++++++++
+Swagger 
++++++++
+
+-> Swagger is used to generate documentation for REST APIs
+
+-> Swagger UI is used to test REST API with user interface
+
+Assignment : https://youtu.be/ARlz2-Twm-g  (watch Swagger video & practise it)
+
+-> Add below 2 dependencies in pom.xml file
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.8.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.8.0</version>
+			<scope>compile</scope>
+		</dependency>
+
+
+-> Add below property in application.properties file
+
+	spring.mvc.pathmatch.matching-strategy = ANT_PATH_MATCHER
+
+
+-> Create Swagger Config class like below
+
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig {
+	
+	@Bean
+	public Docket apiDoc() {
+		
+		return new Docket(DocumentationType.SWAGGER_2)
+				   .select()
+				   .apis(RequestHandlerSelectors.basePackage("in.ashokit.rest"))
+				   .paths(PathSelectors.any())
+				   .build();
+	}
+}
+
+
+-> We can access swagger ui using below URL
+
+		http://localhost:8080/swagger-ui.html#/
+
+
+-> We can access swagger documentation using below url
+
+		http://localhost:8080/v2/api-dcos
+
+
+++++++++++++++++++++++++++++++++++++++++++++
+CRUD Operations using REST API with MySQL DB
+++++++++++++++++++++++++++++++++++++++++++++
+
+-> Download & install MySQL Database  (DB Server)
+
+-> Download & install MySQL Workbench  (DB client)
+
+
+						SQL Queries
+			DB client  ----------------------------> DB server
+
+-> Develop REST API using Layered Architecture
+
+			1) Web Layer 
+
+			2) Business / Serice Layer
+
+			3) DAO Layer
+
+
+
+
+@Data
+@Entity
+@Table(name = "BOOK_DTLS")
+public class Book {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "BOOK_ID")
+	private Integer bookId;
+
+	@Column(name = "BOOK_NAME")
+	private String bookName;
+
+	@Column(name = "BOOK_PRICE")
+	private Double bookPrice;
+
+}
+
+public interface BookRepository extends JpaRepository<Book, Serializable>{
+
+}
+
+public interface BookService {
+
+	public String upsertBook(Book book);
+
+	public List<Book> getAllBooks();
+
+	public String deleteBook(Integer bookId);
+}
+
+@Service
+public class BookServiceImpl implements BookService {
+
+	private BookRepository repository;
+
+	public BookServiceImpl(BookRepository repository) {
+		this.repository = repository;
+	}
+
+	@Override
+	public String upsertBook(Book book) {
+
+		Integer bookId = book.getBookId();
+		
+		System.out.println(book);
+		
+		repository.save(book);
+		
+		System.out.println(book);
+
+		if (bookId == null) {
+			return "Record Inserted";
+		} else {
+			return "Record Updated";
+		}
+	}
+
+	@Override
+	public List<Book> getAllBooks() {
+		return repository.findAll();
+	}
+
+	@Override
+	public String deleteBook(Integer bookId) {
+		repository.deleteById(bookId);
+		return "Book Deleted";
+	}
+}
+
+@RestController
+public class BookRestController {
+
+	@Autowired
+	private BookService service;
+
+	@PostMapping("/book")
+	public ResponseEntity<String> addBook(@RequestBody Book book) {
+		String msg = service.upsertBook(book);
+		return new ResponseEntity<>(msg, HttpStatus.CREATED);
+	}
+
+	@GetMapping("/books")
+	public ResponseEntity<List<Book>> getAllBooks() {
+		List<Book> allBooks = service.getAllBooks();
+		return new ResponseEntity<>(allBooks, HttpStatus.OK);
+	}
+
+	@PutMapping("/book")
+	public ResponseEntity<String> updateBook(@RequestBody Book book) {
+		String msg = service.upsertBook(book);
+		return new ResponseEntity<>(msg, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/book/{bookId}")
+	public ResponseEntity<String> deleteBook(@PathVariable Integer bookId) {
+		String msg = service.deleteBook(bookId);
+		return new ResponseEntity<>(msg, HttpStatus.OK);
+	}
+}
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+######################
+Embedded Database (H2)
+######################
+
+-> Embedded Databases are temporary databases / in-memory databases
+
+-> Embedded Databases are used for POC development  (Proof of concept)
+
+-> We no need to download and install embedded databases
+
+-> Embedded Databases will come along with our application by adding one dependency
+
+-> When we start application then embedded db will start and when we stop the application then embedded db will be stopped
+
+Note: Data is not permenent in the embedded db (when we stop the application we will loose the data)
+
+Note: In Memory DBs are not used for realtime project development in the company
+
+-> We can use H2 DB as an in-memory db for practise purpose
+
+
+-> Add below dependency in pom.xml to
+
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+
+
+-> Configure H2 Datasource properties
+
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.username=sa
+spring.datasource.password=sa
+spring.datasource.driver-class-name=org.h2.Driver
+
+
+-> Run the application and access h2-console using below URL
+
+		http://localhost:8080/h2-console
+
+
+###############
+REST Client
+################
+
+-> The application which is accessing REST API is called as REST Client
+
+-> Rest Client app and REST Api application will communicate using HTTP as a mediator
+
+-> Every Programming language having support to develop REST Client
+
+-> Using Spring Boot also we can develop REST Client Applications
+
+
+1) RestTemplate   
+
+2) WebClient (introduced in spring 5.x version)
+
+
+-> RestTemplate is a predefined class, which is part of 'spring-boot-starter-web' dependency. It supports only synchronus communication.
+
+-> WebClient is a interface which is part of 'spring-boot-starter-webflux' dependency. It supports both synchronus & asynchronus communication.
+
+
+Note: To develop REST Client we need to know REST API details 
+
+1) API URL
+2) API Request Method
+2) API request data structure 
+3) API response data structure
+
+
+-> REST API team will send swagger documentation to REST Client side team. Using swagger documentation we need to understand the api and we need to develop REST Client logic to access REST API.
+
+
+
+######################################
+RestTemplate Example to access REST API
+######################################
+
+
+******************Sending HTTP  GET Request using RestTemplate*****************
+
+
+		String apiURL = "https://ashokit-sb-rest-api.herokuapp.com/";
+
+		RestTemplate rt = new RestTemplate();
+
+		ResponseEntity<String> forEntity = rt.getForEntity(apiURL, String.class);
+
+		String body = forEntity.getBody();
+
+		System.out.println(body);
+
+
+******************Sending HTTP POST Request using RestTemplate*****************
+
+@Service
+public class BookClient {
+
+	public void invokeBookTicket() {
+		String apiUrl = "https://ashokit-book-app.herokuapp.com/book";
+
+		Book book = new Book();
+		book.setBookName("Java");
+		book.setBookPrice(345.00);
+
+		RestTemplate rt = new RestTemplate();
+		
+		ResponseEntity<String> postForEntity = rt.postForEntity(apiUrl, book, String.class);
+		System.out.println(postForEntity.getBody());
+	}
+}
+
+*********************Sending GET Request and binding Response JSON to Binding Obj************************
+
+public void invokeGetBooksNew() {
+		String apiUrl = "https://ashokit-book-app.herokuapp.com/books";
+
+		RestTemplate rt = new RestTemplate();
+		ResponseEntity<Book[]> forEntity = rt.getForEntity(apiUrl, Book[].class);
+		Book[] body = forEntity.getBody();
+		for(Book book : body) {
+			System.out.println(book);
+		}
+	}
+}
+
+******************************************************************************************************
+
+
+###############################
+What is Synchronus & Asynchronus
+#################################
+
+-> Synchronus means blocking the thread until we get response
+
+-> Asynchronus means non-blocking thread
+
+-> RestTemplate supports only Synchronus communications
+
+-> WebClient supports both Sync & Async communications
+
+-> WebClient introduced in Spring 5.x version
+
+-> WebClient is part of WebFlux starter
+
+
+
+GET : https://ashokit-book-app.herokuapp.com/books
+
+POST : https://ashokit-book-app.herokuapp.com/book
+
+
+
+
+############################
+HTTP Post Request with WebClient
+#############################
+
+public void invokeSaveBook() {
+		
+		Book book = new Book();
+		book.setBookName("Angular");
+		book.setBookPrice(450.00);
+		
+		String apiUrl = "https://ashokit-book-app.herokuapp.com/book";
+		
+		WebClient client = WebClient.create();
+		
+		String resp = client.post() // HTTP POST Request
+							.uri(apiUrl) // Endpoint URL
+							.bodyValue(book) // HTTP Request Body Data
+							.retrieve() // Retrieve HTTP Response Body
+							.bodyToMono(String.class) //Bind Response to string var
+							.block(); // Make it as Sync client
+		
+		System.out.println(resp);
+	}
+
+
+################################
+HTTP GET Request using WebClient
+#################################
+
+public void invokeGetBooks() {
+		String apiUrl = "https://ashokit-book-app.herokuapp.com/books";
+		WebClient client = WebClient.create();
+		
+		/*
+		 String body = client.get() // GET Request
+			  .uri(apiUrl) // Endpoint URL
+			  .retrieve() // retrieve response body
+			  .bodyToMono(String.class) // bind response data to string var
+			  .block(); // make it sync
+		 */
+		
+		Book[] responseData = client.get()
+								  .uri(apiUrl)
+								  .retrieve()
+								  .bodyToMono(Book[].class)
+								  .block();
+		
+		for(Book b : responseData) {
+			System.out.println(b);
+		}
+}
+
+
+
+###############################
+Asynchronus call using Webclient
+###############################
+
+public void invokeGetBooksAsync() {
+		String apiUrl = "https://ashokit-book-app.herokuapp.com/books";
+		WebClient client = WebClient.create();
+		
+				  client.get()
+					    .uri(apiUrl)
+					    .retrieve()
+					    .bodyToMono(Book[].class)
+					   .subscribe(BookClient::respHandler); // Async Communication
+		
+		System.out.println("**************Request Sent***********");
+}
+
+public static void respHandler(Book[] books) {
+		for(Book b : books) {
+			System.out.println(b);
+		}
+}
+
+
+
++++++++++++++++++++++++
+Monlith Vs Microservices
++++++++++++++++++++++++
+
+Application can be developed in 2 ways
+
+1) Monolith Architecture
+
+2) Microservices Architecture
+
+-> If we develop all the functionalities in one single application then it is called as Monolith Application
+
+++++++++++
+Advantages
+++++++++++
+1) Development is easy
+2) Deployment is easy
+3) Performance
+4) Easy Testing
+5) Easy Debugging
+6) KT is easy
+
+++++++++++++++
+Dis-Advantages
+++++++++++++++
+
+1) Single point of failure
+2) Whole Application Re-Deployment
+3) Scalability ( Increasing & Decreasing resources based on demand )
+4) Reliability (Strong)
+5) Availability (Zero Downtime)
+
+=> If we develop the functionalities in multiple services/apis then it is called as Microservices Architecture Based Application.
+
+=> Every Microservice will have its own goal
+
+++++++++++
+Advantages
+++++++++++
+
+1) Loosely coupled
+2) Fast Development
+3) Quick Releases
+4) Flexibility
+5) Scalability
+6) No Single Point of failure
+7) Technology independence
+
+
+++++++++++++++
+Challenges
+++++++++++++++
+
+1) Bounded context (identifying no.of services to develop)
+
+2) Lot of configurations
+
+3) Visibility
+
+4) Testing is difficult
+
+5) Debugging
+
+
+
+########################
+Microservices Architecture
+########################
+
+-> Microservices is an architectural design pattern to develop our applications
+
+-> There is no fixed architecture for Microservices Based Applications
+
+-> People are customizing Microservices Architecture according to their requirement
+
+
+*********** Let us see generalized architecture of Microservices ***************
+
+
+1) Service Registry
+
+2) Admin Server
+
+3) Zipkin Server
+
+4)  Services (REST APIs)
+
+5) FeignClient
+
+6) API Gateway
+
+
+
+
+-> ServiceRegistry is used to register all our backend services/apis
+-> Service Registry will maintain services names, urls and status of each service
+-> We can use EurekaServer as a service registry
+
+Note: EurekaServer provided by Spring Cloud Netflix Library
+
+
+-> AdminServer is used to monitor and manage all our backend services at one place
+-> AdminServer will provide user interface to monitor and manage our services
+-> Using AdminServer user interface we can access Actuator Endpoints of our services at one place
+
+Note: AdminServer and Admin Client provided by 'Code Centric' company (we can integrate with boot)
+
+
+-> ZipkinServer is used for Distributed Log Tracing
+-> ZipkinServer will provide user interface to monitor application execution details
+-> How many services involved and which service took more time to process the request can be monitored using Zipkin
+
+Note: Zipkin is third party open source server (can be integrated with spring boot)
+
+
+-> Backend services are nothing but REST APIs (which are also called as Microservices)
+-> Backend REST APIs contains actual business logic of our application
+-> One project will have multiple REST APIs in the backend
+-> Each Backend api will act as client for Service Registry + Admin Server + Zipkin Server
+
+
+-> With in the same application If one backend api communicating with another backend api  then it is called as Interservice communication
+
+-> FeignClient will be used to perform Interservice Communication
+
+
+Note: Based on requirement our backend apis can communicate with 3 rd party apis using RestTemplate or WebClient
+
+
+
+-> Api Gateway will act as an Entry point for our backend apis
+-> It acts as mediator between endusers and backend apis
+-> API Gateway contains Filters and Routing
+-> Filters we can use to authenticate incoming requests
+-> Routing will decide which request should go to which backend api
+
+Note: In previous versions we have Zuul Proxy as API Gateway but now it got removed from latest version of boot
+
+-> Spring Cloud Gateway we can use as API Gateway for our application
+
+
+
+
+#####################################
+Microservices Mini Project Implementation
+#####################################
+
+*********** Step- 1) Create Service Registry Application using Eureka Server *******************
+
+
+1) Create Spring Boot app with below dependencies
+
+ 		a) 'Spring-cloud-starter-netflix-eureka-server' 
+		b) web starter
+		c) devtools
+
+2) Configure @EnableEurekaServer annotation at boot start class
+
+3) Configure below properties in application.yml file
+
+server:
+  port: 8761
+
+eureka:
+  client:
+    register-with-eureka: false
+
+4) Run the application and access in browser
+
+		URL : http://localhost:8761/
+
+
+
+*************************** Step-2 ) Create Spring Boot Application with Admin Server ************************************
+
+
+1) Create Boot application with below dependencies
+
+	a) web-starter
+	b) devtools
+	c) admin-server (code centric)
+
+2) Configure @EnableAdminServer annotation at boot start class
+
+3)  Configure Embedded Container Port Number (we can use any port)
+
+4)  Run the application and access the application in browser
+
+		URL : http://localhost:port/
+
+
+*************************** Step-3)  Download & Run Zipkin Server *****************************************
+
+1)  Download zipkin jar from below URL
+
+	URL : https://search.maven.org/remote_content?g=io.zipkin&a=zipkin-server&v=LATEST&c=exec
+
+
+2) Run the zipkin server jar file using below command
+
+	$   java  -jar  <zipkin-server-jar>
+
+
+
+************************** Step-4) Develop REST API (WELCOME API) **********************************
+
+1) Create boot application with below dependencies
+
+
+			- eureka-discovery-client
+			- admin-client
+			- zipkin client
+			- sleuth (It is for logging)
+			- web-starter
+			- devtools
+			- actuatoR
+
+
+2) Configure @EnableDiscoveryClient annotation at start class (It will search and register with Eureka)
+
+3) Create Rest Controller with required methods
+
+4) Configure below properties in application.yml
+
+			- server port
+			- admin server url
+			- actuator endpoints
+			- applicaion name
+
+---
+server:
+  port: 8081
+spring:
+  application:
+    name: WELCOME-API
+  boot:
+    admin:
+      client:
+        url: http://localhost:1111/
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+...
+
+5) Run the application and check Eureka Dashboard, Admin Server Dashboard and Zipkin Dashboard
+
+
+*************************************Step-5) Develop REST API (GREET API)**********************************************
+
+
+1) Create boot application with below dependencies
+
+			- eureka-discovery-client
+			- admin-client
+			- zipkin client
+			- sleuth (It is for logging)
+			- web-starter
+			- devtools
+			- actuator
+			- feign-client
+
+
+2) Configure @EnableDiscoveryClient & @EnableFeignClients annotations at start class 
+
+3) Create FeginClient to access WELCOME-API
+
+@FeignClient(name = "WELCOME-API")
+public interface WelcomeApiClient {
+
+	@GetMapping("/welcome")
+	public String invokeWelcomeApi();
+
+}
+
+4) Create Rest Controller with required methods
+
+5) Configure below properties in application.yml
+
+			- server port
+			- admin server url
+			- actuator endpoints
+			- applicaion name
+
+---
+server:
+  port: 9091
+spring:
+  application:
+    name: GREET-API
+  boot:
+    admin:
+      client:
+        url: http://localhost:1111/
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+...
+
+6) Run the application and check Eureka Dashboard, Admin Server Dashboard and Zipkin Dashboard
+
+
+
+
+***************************************Step-6 :: Develop API-Gateway Application****************************************************
+
+1) Create boot application with below dependencies
+
+		- cloud-gateway
+		- eureka-client
+		- web-starter
+		- devtools
+
+
+2) Configure @EnableDiscoveryClient annotation at boot start class
+
+
+3) Configure Server Port & API Routings in application.yml file
+
+---
+server:
+  port: 3333
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+      - id: one
+        uri: lb://WELCOME-API
+        predicates:
+        - Path=/welcome
+      - id: two
+        uri: lb://GREET-API
+        predicates:
+        - Path=/greet
+---
+
+4) Run the application and Test it.
+
+
+**********************************************************************************************************************
+
+=> We can access Client sent request information using Filter
+
+=> The client request information we can use to validate that request
+
+-> Create below Filter in API Gateway (It will execute for every request)
+
+
+@Component
+public class MyPreFilter implements GlobalFilter {
+
+	Logger logger = LoggerFactory.getLogger(MyPreFilter.class);
+
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+		logger.info("filter() method executed....");
+
+		// Access request information
+		ServerHttpRequest request = exchange.getRequest();
+
+		HttpHeaders headers = request.getHeaders();
+		
+		Set<String> keySet = headers.keySet();
+		
+		keySet.forEach(key -> {
+			List<String> values = headers.get(key);
+			System.out.println(key + "::" + values);
+		});
+
+		return chain.filter(exchange);
+	}
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+-> When we send request to REST API using POSTMAN, it will send POSTMAN Token in reuqest header. Using this token we can differentiate request came from other apps or from POSTMAN.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+###################
+Load Balancing
+###################
+
+-> If we run our application on Single Server then all requests will be sent to single server
+-> Burden will be increased on the server
+-> When burden got increased request processing gets delayed
+-> Sometimes our server might crash due to heavy load
+
+********** To overcome above problems we will use Load Balancing concept *****************
+
+-> Load Balancing is the process of distributing load to multiple servers
+
+
+##################################
+LBR implementation in Mini Project
+#################################
+
+-> Make below changes in WelcomeApi Rest Controller
+
+@RestController
+public class WelcomeRestController {
+
+	@Autowired
+	private Environment env;
+
+	@GetMapping("/welcome")
+	public String welcomeMsg() {
+
+		String port = env.getProperty("server.port");
+
+		String msg = "Welcome to Ashok IT..!!" + " (Port :: " + port + ")";
+
+		return msg;
+	}
+}
+
+-> Run Welcome API with 3 instances
+
+			-> Righ Click on API
+			-> Run As -> Run Configurations
+			-> Select Application
+			-> Arguments
+			-> VM Arguments (-Dserver.port=8082)
+			-> Apply & Run it
+
+
+-> Check Eureka Dashboard
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
