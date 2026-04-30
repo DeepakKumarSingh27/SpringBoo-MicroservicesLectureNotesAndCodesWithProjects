@@ -75,6 +75,7 @@
 	</section>
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="E:\AshokSirSprngBootRepeatCode\48-SBMS-API-GATWAY"/>
 			<item value="E:\AshokSirSprngBootRepeatCode\24-WebMVC-App3"/>
 			<item value="E:\AshokSirSprngBootRepeatCode\24-WebMvc-App3"/>
 			<item value="E:\AshokSirSprngBootRepeatCode\20_SB_Data_Jpa_Tx_Rollback"/>

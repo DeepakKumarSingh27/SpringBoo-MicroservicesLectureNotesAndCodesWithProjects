@@ -13,8 +13,9 @@ public class WelcomeRestController {
 
 	@GetMapping("/welcome")
 	public String welcomeMsg() {
-		String port = env.getProperty("server.port");
+  		String port = env.getProperty("server.port");
 		String msg = "Welcome to ashokit!!" + " (port :: " + port + " )";
 		return msg;
 	}
 }
+ 
