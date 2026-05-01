@@ -75,6 +75,8 @@
 	</section>
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="E:\AshokSirSprngBootRepeatCode\51-SMBS-Redis-Cache"/>
+			<item value="E:\AshokSirSprngBootRepeatCode\50-SMBS-Circiut-Breaker"/>
 			<item value="E:\AshokSirSprngBootRepeatCode\48-SBMS-API-GATWAY"/>
 			<item value="E:\AshokSirSprngBootRepeatCode\24-WebMVC-App3"/>
 			<item value="E:\AshokSirSprngBootRepeatCode\24-WebMvc-App3"/>
